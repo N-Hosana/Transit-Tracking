@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { Trip } from "../models";  // Make sure your index.ts exports Trip
 import { ROUTING_RULES } from "../db/config/routingrules";
+import { ALL } from "node:dns";
 
 const router = Router();
 
@@ -13,11 +14,13 @@ router.get("/", async (req: Request, res: Response) => {
     if (!current_location || !destination) {
       return res.status(400).json({ message: "current_location and destination are required" });
     }
-
+    if (current_location===destination ) {
+      return res.status(400).json({ message: "fromlocation and tolocation cannot be the same" });
+  }
   const rule = ROUTING_RULES[current_location];
 
 const allowedDestinations = rule;
-rule===undefined? null : rule;
+rule=== undefined? null : rule;
 
 
 if (allowedDestinations && !allowedDestinations.includes(destination)) {
@@ -40,6 +43,9 @@ else if(allowedDestinations)
         to: destination,
       },
     });
+    if (current_location===destination ) {
+      return res.status(400).json({ message: "fromlocation and tolocation cannot be the same" });
+  }
 
     return res.json(trips);
   } catch (error) {
@@ -66,7 +72,10 @@ router.get("/:id", async (req: Request, res: Response) => {
 // POST create trip (admin only - assume auth middleware)
 router.post("/", async (req: Request, res: Response) => {
   const { bus_id, route_name, departure_time, available_seats, from_location, to_location } = req.body;
+if(req.user && !req.user.isAdmin){
+    return res.status(403).json({ message: "Can't access this functionality." });
 
+  }
   if (
     !bus_id ||
     !route_name ||
@@ -77,6 +86,20 @@ router.post("/", async (req: Request, res: Response) => {
   ) {
     return res.status(400).json({ message: "Missing or invalid fields" });
   }
+                  const rule = ROUTING_RULES[from_location];
+
+            if (!rule) {
+              return res.status(400).json({
+                message: "Invalid fromLocation",
+              });
+            }
+
+            if (
+              rule !== undefined && !rule.includes(to_location)) {
+              return res.status(400).json({
+                message: `Trips from ${from_location} cannot go to ${to_location}`,
+              });
+            }
 
   try {
     const newTrip = await Trip.create({

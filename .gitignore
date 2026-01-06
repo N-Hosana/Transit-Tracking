@@ -8,6 +8,27 @@ scripts/
 .*log
 npm-debug.log*
 build/
+coverage/
+.idea/
+*.iml
+.cache/
+migrations/
+.pnp.*
+.pnp.js
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+debug.log*
+logs/
+*.tsbuildinfo
+
+
+
+
+
+
+
+
 
 
 
