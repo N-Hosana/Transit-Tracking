@@ -7,6 +7,7 @@ import app from './app';
 import './models';
 import sequelize from "./db/config/sequelize";
 import { seedBusStops } from "./seeders/busstopseeder";
+import authRoutes from './routes/authRoutes';
 
 
 
@@ -18,7 +19,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/trips', tripRouter);
-
+app.use('/auth', authRoutes)
 const PORT = process.env.PORT || 3000;
 
 

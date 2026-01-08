@@ -3,9 +3,11 @@ import sequelize from '../db/config/sequelize';
 
 interface UserAttributes {
   id: number;
+  name: string;
   email: string;
   password: string;
   isAdmin: boolean;
+  role: 'USER' | 'ADMIN';
 }
 
 interface UserCreationAttributes
@@ -16,9 +18,11 @@ class User
   implements UserAttributes
 {
   public id!: number;
+  public name!: string;
   public email!: string;
   public password!: string;
   public isAdmin!: boolean;
+  public role!: 'USER' | 'ADMIN';
 }
 
 User.init(
@@ -27,6 +31,10 @@ User.init(
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
     email: {
       type: DataTypes.STRING,
@@ -40,7 +48,12 @@ User.init(
     isAdmin: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
-    }
+    },
+    role: {
+      type: DataTypes.ENUM('USER', 'ADMIN'),
+      allowNull: false,
+      defaultValue: 'USER',
+}
   },
   {
     sequelize,
