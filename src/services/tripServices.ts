@@ -6,19 +6,19 @@ import * as pool from '../db/config';
 
 
 export async function findAvailableBuses(
-  currentBusStopId: number,
-  destinationBusStopId: number
+  currentBusStop: string,
+ 
 ) {
   return BusTrip.findAll({
     where: {
-      currentBusStopId,
+      currentBusStop,
       isAvailable: { [Op.gt]: 0 }
     },
     include: [
       {
         model: Trip,
         where: {
-          toBusStopId: destinationBusStopId
+          toBusStop: currentBusStop
         }
       },
       {

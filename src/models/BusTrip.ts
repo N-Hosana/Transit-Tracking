@@ -5,7 +5,7 @@ interface BusTripAttributes {
   id: number;
   busId: number;
   tripId: number;
-  currentBusStopId: number;
+  currentBusStop: number;
   isAvailable: boolean;
 }
 
@@ -18,7 +18,7 @@ class BusTrip
   public id!: number;
   public busId!: number;
   public tripId!: number;
-  public currentBusStopId!: number;
+  public currentBusStop!: number;
   public isAvailable!: boolean;
 }
 
@@ -37,8 +37,8 @@ BusTrip.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    currentBusStopId: {
-      type: DataTypes.INTEGER,
+    currentBusStop: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     isAvailable: {

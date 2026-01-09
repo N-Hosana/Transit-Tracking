@@ -2,8 +2,15 @@ import { Router, Request, Response } from "express";
 import { Trip } from "../models";  // Make sure your index.ts exports Trip
 import { ROUTING_RULES } from "../db/config/routingrules";
 import { ALL } from "node:dns";
+import { getAllAvailableTrips } from "../controllers/tripController";
+import { searchAvailableTrips } from "../controllers/tripController";
+
 
 const router = Router();
+
+router.get('/available', getAllAvailableTrips);
+router.post('/search', searchAvailableTrips);
+
 
 // GET trips filtered by current_location and destination
 router.get("/", async (req: Request, res: Response) => {
@@ -54,20 +61,7 @@ else if(allowedDestinations)
   }
 });
 
-// GET trip by ID
-router.get("/:id", async (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  if (isNaN(id)) return res.status(400).json({ message: "Invalid trip ID" });
 
-  try {
-    const trip = await Trip.findByPk(id);
-    if (!trip) return res.status(404).json({ message: "Trip not found" });
-    return res.json(trip);
-  } catch (error) {
-    console.error("Error fetching trip:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
-});
 
 // POST create trip (admin only - assume auth middleware)
 router.post("/", async (req: Request, res: Response) => {
@@ -121,12 +115,12 @@ if(req.user && !req.user.isAdmin){
 });
 
 // POST board a trip (decrement available seats)
-router.post("/:id/board", async (req: Request, res: Response) => {
-  const id = Number(req.params.id);
-  if (isNaN(id)) return res.status(400).json({ message: "Invalid trip ID" });
+router.post("/:location/board", async (req: Request, res: Response) => {
+  const location= Number(req.params.current_location);
+  if (isNaN(location)) return res.status(400).json({ message: "Invalid Location" });
 
   try {
-    const trip = await Trip.findByPk(id);
+    const trip = await Trip.findByPk(location);
     if (!trip) return res.status(404).json({ message: "Trip not found" });
 
     if (trip.AvailableSeats <= 0) {
@@ -141,6 +135,9 @@ router.post("/:id/board", async (req: Request, res: Response) => {
     console.error("Error boarding trip:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
+
+
 });
+
 
 export default router;

@@ -5,6 +5,8 @@ import { errorHandler } from "./Middlewares/Errorhandler";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger.json";
 import busStopRoutes from "./routes/BusstopRoutes";
+import adminBusRoutes from './routes/AdminBusRoutes';
+
 
 
 
@@ -42,6 +44,7 @@ app.use("/api/busstops", busStopRoutes);
 app.use("/api/users", userRoutes);
 
 app.use(errorHandler);
+app.use('/admin', adminBusRoutes);
 
 
 

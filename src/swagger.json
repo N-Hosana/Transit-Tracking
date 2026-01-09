@@ -143,11 +143,41 @@
         }
       }
     },
+    "/trips/available": {
+  "get": {
+    "summary": "Get all available trips and buses",
+    "tags": ["Trips"],
+    "responses": {
+      "200": {
+        "description": "List of active trips with buses",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TripWithBus"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+,
 
     "/trips/search": {
-      "get": {
-        "summary": "Search available trips by location and destination",
+      "post": {
+        "summary": "Search available trips by location",
         "tags": ["Trips"],
+         "parameters": [
+          {
+            "name": "location",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -158,18 +188,14 @@
                   "from": {
                     "type": "string",
                     "example": "Nyamirambo"
-                  },
-                  "to": {
-                    "type": "string",
-                    "example": "Town"
+                    
                   }
-                },
-                "required": ["from", "to"]
-              }
+                }
+                }
             }
           }
         },
-        "responses": {
+            "responses": {
           "200": {
             "description": "Available trips and buses",
             "content": {
@@ -178,26 +204,31 @@
                   "type": "array",
                   "items": { "$ref": "#/components/schemas/AvailableTrip" }
                 }
-              }
+              
+            }
             }
           },
-          "400": {
-            "description": "Location and destination are required"
+            "400": {
+            "description": "Location is required"
           }
+          }
+           
         }
-      }
-    },
-
-    "/trips/{id}/board": {
+      },
+      
+    
+ 
+  
+    "/trips/{location}/board": {
       "post": {
         "summary": "Board a bus (decrease available seats)",
         "tags": ["Trips"],
         "parameters": [
           {
-            "name": "id",
+            "name": "location",
             "in": "path",
             "required": true,
-            "schema": { "type": "integer" }
+            "schema": { "type": "string" }
           }
         ],
         "responses": {
@@ -207,6 +238,7 @@
       }
     }
   },
+  
 
   "components": {
     
@@ -266,7 +298,27 @@
           "estimatedArrivalMinutes": { "type": "integer" },
           "trafficWarning": { "type": "string", "example": "Moderate traffic" }
         }
+      },
+      "TripWithBus": {
+  "type": "object",
+  "properties": {
+    "id": { "type": "integer" },
+    "from": { "type": "string" },
+    "to": { "type": "string" },
+    "price": { "type": "number" },
+    "estimatedDurationMinutes": { "type": "integer" },
+    "availableSeats": { "type": "integer" },
+    "Bus": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "plateNumber": { "type": "string" },
+        "driverName": { "type": "string" }
       }
+    }
+  }
+}
+
     }
   }
 }
