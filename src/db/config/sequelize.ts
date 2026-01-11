@@ -11,6 +11,8 @@ const sequelize = new Sequelize(
     dialect: "postgres",
     logging: false,
   }
+  
 );
+
 
 export default sequelize;

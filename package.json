@@ -4,9 +4,9 @@
   "description": "Public transit tracking and seat availability system for Rwanda",
   "main": "dist/server.js",
   "type": "commonjs",
-  
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "test": "jest --runInBand --coverage",
     "build": "tsc",
     "start": "node dist/server.js",
     "migrate:create": "node-pg-migrate create",
@@ -25,6 +25,7 @@
   "author": "Hosana Niyonkuru",
   "license": "ISC",
   "dependencies": {
+    "@types/supertest": "^6.0.3",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
@@ -45,13 +46,19 @@
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^25.0.3",
     "@types/pg": "^8.16.0",
     "@types/swagger-ui-express": "^4.1.8",
     "@types/uuid": "^10.0.0",
+    "coveralls": "^3.1.1",
+    "jest": "^30.2.0",
     "node-pg-migrate": "^8.0.4",
     "nodemon": "^3.1.11",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.6",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
   },

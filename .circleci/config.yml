@@ -1,0 +1,38 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5.1.0
+
+jobs:
+  test:
+    docker:
+      - image: cimg/node:18.19
+      - image: cimg/postgres:15.5
+        environment:
+          POSTGRES_DB: transit_tracking_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+
+    environment:
+      NODE_ENV: test
+      DB_HOST: localhost
+      DB_NAME: transit_tracking_test
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_DIALECT: postgres
+      JWT_SECRET: testsecret
+
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Run tests
+          command: npm test -- --coverage
+      - run:
+          name: Upload coverage to Coveralls
+          command: npx coveralls < coverage/lcov.info
+
+workflows:
+  test_pipeline:
+    jobs:
+      - test

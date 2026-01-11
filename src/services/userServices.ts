@@ -1,16 +1,21 @@
 import { query } from "../db/config";
 import  User  from "../models/user";
+import {Transaction} from 'sequelize';
 
 export const getUsers = async (): Promise<User[]> => {
   const result = await query("SELECT * FROM users");
   return result.rows;
 };
 
-export const createUser = async (email: string, name?: string) => {
-  const result = await query(
-    "INSERT INTO users (email, name) VALUES ($1, $2) RETURNING *",
-    [email, name || null]
-  );
+export const createUser = async (
+   data: {
+    name: string;
+    email: string;
+    password: string;
+    role: 'ADMIN' | 'USER';
+  },
+    transaction?:Transaction
 
-  return result.rows[0];
+) => {
+   return User.create(data, transaction ? { transaction } : undefined);
 };

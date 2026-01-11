@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import { createBus } from '../controllers/BusController';
-import { authMiddleware, authorizeAdmin } from '../Middlewares/AuthMiddleware';
+import { authenticate, authMiddleware, authorizeAdmin } from '../Middlewares/AuthMiddleware';
 import { createTrip, getAllTrips } from '../controllers/tripController';
 
 const router = Router();
 
 router.post(
   '/buses',
-  authMiddleware,
+  authenticate,
   authorizeAdmin,
   createBus
 );
