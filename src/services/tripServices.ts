@@ -5,26 +5,12 @@ import  Bus  from '../models/Bus';
 import * as pool from '../db/config';
 
 
-export async function findAvailableBuses(
-  currentBusStop: string,
- 
-) {
-  return BusTrip.findAll({
+export async function findAvailableBuses(from: string) {
+  return Trip.findAll({
     where: {
-      currentBusStop,
-      isAvailable: { [Op.gt]: 0 }
-    },
-    include: [
-      {
-        model: Trip,
-        where: {
-          toBusStop: currentBusStop
-        }
-      },
-      {
-        model: Bus
-      }
-    ]
+      from,
+      AvailableSeats: { [Op.gt]: 0 }
+    }
   });
 }
   export async function boardTrip(tripId: number, userId: number, currentBusStopId: number)

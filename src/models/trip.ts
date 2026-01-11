@@ -10,11 +10,12 @@ interface TripAttributes {
   isActive: boolean;
   createdById: number;
   AvailableSeats: number;
-
+  fromBusStopId?: number;
+  toBusStopId?: number;
 }
 
 interface TripCreationAttributes
-  extends Optional<TripAttributes, 'id' | 'isActive'> {}
+  extends Optional<TripAttributes, 'id' | 'isActive' | 'fromBusStopId' | 'toBusStopId'> {}
 
 class Trip extends Model<TripAttributes, TripCreationAttributes>
   implements TripAttributes {
@@ -26,7 +27,8 @@ class Trip extends Model<TripAttributes, TripCreationAttributes>
   public isActive!: boolean;
   public createdById!: number;
   public AvailableSeats!: number;
-  
+  public fromBusStopId?: number;
+  public toBusStopId?: number;
 }
 
 Trip.init(
@@ -63,6 +65,14 @@ Trip.init(
     AvailableSeats: {
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    fromBusStopId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    toBusStopId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
   },
   {
